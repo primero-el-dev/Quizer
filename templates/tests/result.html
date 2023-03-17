@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1 class="mb-3">{% block title %} Results for test {{ test.name }} {% endblock %}</h1>
+        
+    <div class="w-100 mb-3">
+        {% set max_points = test.get_max_points() %}
+        {% for pc in points %}
+        <div class="card w-100 mb-5">
+            <div class="card-body">
+                <h4 class="card-title">
+                    {{ test.get_point_category(pc).name }}
+                    {% if test.show_results_as_percent %}
+                        - {{ points[pc] }} / {{ max_points[pc] }} points
+                    {% elif max_points[pc] > 0 %}
+                        - {{ 100 * points[pc] / max_points[pc] }}%
+                    {% endif %}
+                </h4>
+                {{ test.get_point_category(pc).description }}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+{% endblock %}

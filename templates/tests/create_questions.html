@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+{% import "bootstrap/wtf.html" as wtf %}
+{% from "includes/macros.html" import form_field, show_errors %}
+
+{% block content %}
+    <h1 class="mb-3">{% block title %} Add questions to test {{ test.name }} {% endblock %}</h1>
+
+    <form method="POST">
+        {{ form.hidden_tag() }}
+
+        <div class="questions-container mt-4">
+            <div class="questions">
+                
+                {% for question in form.questions %}
+                <div class="question card border border-dark">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="d-inline-block">Question</h5>
+                        <span>
+                            <button type="button" class="btn btn-mini btn-primary ml-auto">Move up</button>
+                            <button type="button" class="btn btn-mini btn-primary ml-4">Move down</button>
+                            <button type="button" class="btn btn-mini btn-danger ml-4">Delete</button>
+                        </span>
+                    </div>
+                    <div class="card-body">
+                        {{ question.hidden_tag() }}
+                        {{ form_field(question, 'content') }}
+                        {{ form_field(question, 'answer_type') }}
+
+                        <h4 class="mt-4">Answers</h4>
+                        <div class="answers mb-3">
+
+                            {% for answer in question.answers %}
+                            <div class="answer card border border-dark">
+                                <div class="card-header d-flex justify-content-between align-items-center">
+                                    <h5 class="d-inline-block">Answer</h5>
+                                    <span>
+                                        <button type="button" class="move-up-answer btn btn-mini btn-primary ml-auto" onclick="moveUpAnswer(event)">Move up</button>
+                                        <button type="button" class="move-down-answer btn btn-mini btn-primary ml-4" onclick="moveDownAnswer(event)">Move down</button>
+                                        <button type="button" class="delete-answer btn btn-mini btn-danger ml-4" onclick="deleteClosestAnswer(event)">Delete</button>
+                                    </span>
+                                </div>
+                                <div class="card-body">
+                                    {{ answer.hidden_tag() }}
+                                    {{ form_field(answer, 'content') }}
+                                    {{ form_field(answer, 'min_points') }}
+                                    {{ form_field(answer, 'max_points') }}
+                                    {{ form_field(answer, 'step') }}
+                                    {{ form_field(answer, 'first_label') }}
+                                    {{ form_field(answer, 'second_label') }}
+                                    {{ form_field(answer, 'negative_point_category_id') }}
+                                    {{ form_field(answer, 'positive_point_category_id') }}
+                                </div>
+                            </div><!-- Answer -->
+                            {% endfor %}
+
+                        </div>
+                        <button type="button" class="btn btn-primary w-100" onclick="insertAnswer(event)">Add new answer</button>
+                    </div>
+                </div><!-- Question -->
+                {% endfor %}
+            </div>
+        </div>
+
+        <button type="button" class="btn btn-primary my-3 w-100" onclick="insertQuestion(event)">Add new question</button>
+
+        <button type="submit" class="btn btn-success my-3 w-100">Save</button>
+    </form>
+
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/elements_manipulation.js') }}"></script>
+<script src="{{ url_for('static', filename='js/test_questions_create.js') }}"></script>
+{% endblock %}

@@ -1,0 +1,11 @@
+Flask
+mysql-connector==2.2.9
+python-dotenv
+flask_sqlalchemy==3.0.3
+pymysql
+Flask-Bcrypt
+Flask-Session
+Flask-WTF
+Flask-Bootstrap
+email_validator
+Flask-UUID

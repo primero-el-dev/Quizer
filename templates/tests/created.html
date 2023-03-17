@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1 class="mb-3">{% block title %} Tests by me {% endblock %}</h1>
+    
+    <table id="tests" class="table display w-100">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th class="no-sort no-search"></th>
+                <th class="no-sort no-search"></th>
+                <th class="no-sort no-search"></th>
+                <th class="no-sort no-search"></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for test in tests %}
+            <tr>
+                <td>{{ test.name }}</td>
+                <td><a href="{{ url_for('tests_edit', test_id=test.id) }}" class="btn btn-mini btn-primary">Edit test</a></td>
+                <td><a href="{{ url_for('tests_questions_create', test_id=test.id) }}" class="btn btn-mini btn-primary">Edit questions</a></td>
+                <td>
+                    {% if test.is_published %}
+                    <a href="{{ url_for('tests_unpublish', test_id=test.id) }}" class="btn btn-mini btn-danger">Unpublish test</a>
+                    {% else %}
+                    <a href="{{ url_for('tests_publish', test_id=test.id) }}" class="btn btn-mini btn-success" {% if not test.questions %} disabled {% endif %}>Publish test</a>
+                    {% endif %}
+                </td>
+                <td>
+                    <form class="form-inline" action="{{ url_for('tests_delete', test_id=test.id) }}" method="POST" onsubmit="return confirm('Do you really want to delete test {{ test.name }}?')">
+                        <button type="submit" class="btn btn-mini btn-danger">Delete test</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
+
+{% block styles %}
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.4/css/dataTables.bootstrap5.min.css"/>
+{% endblock %}
+
+{% block scripts %}
+<script type="text/javascript" src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/1.13.4/js/dataTables.bootstrap5.min.js"></script>
+
+<script defer>
+    $(document).ready(function () {
+        $('#tests').DataTable({
+            columnDefs: [
+                { targets: 'no-sort', orderable: false },
+                { targets: 'no-search', searchable: false },
+            ]
+        })
+
+        function confirmDelete(e) {
+            e.preventDefault()
+            if (confirm('Are you sure you want to delete this test?')) {
+            }
+        }
+    })
+</script>
+{% endblock %}

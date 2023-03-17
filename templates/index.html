@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1 class="mb-3">{% block title %} Tests {% endblock %}</h1>
+
+    <table id="tests" class="table display w-100">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Description</th>
+                <th class="no-sort no-search"></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for test in tests %}
+            <tr>
+                <td>{{ test.name }}</td>
+                <td><small>{{ test.description }}</small></td>
+                <td><a href="{{ url_for('tests_solve', test_id=test.id) }}" class="d-block mb-3">Solve</a></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
+
+{% block styles %}
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.4/css/dataTables.bootstrap5.min.css"/>
+{% endblock %}
+
+{% block scripts %}
+<script type="text/javascript" src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/1.13.4/js/dataTables.bootstrap5.min.js"></script>
+
+<script defer>
+    $(document).ready(function () {
+        $('#tests').DataTable({
+            columnDefs: [
+                { targets: 'no-sort', orderable: false },
+                { targets: 'no-search', searchable: false },
+            ]
+        })
+    })
+</script>
+{% endblock %}

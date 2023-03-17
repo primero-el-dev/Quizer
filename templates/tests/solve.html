@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% from "includes/macros.html" import show_question %}
+
+{% block title %} Test {{ test.name }} {% endblock %}
+
+{% block content %}
+    <h1 class="mb-5">Test {{ test.name }}</h1>
+
+    <form method="POST">
+        {% for question in test.questions %}
+            {{ show_question(question) }}
+        {% endfor %}
+
+        <button type="submit" class="btn btn-success my-3 w-100">Submit</button>
+    </form>
+
+{% endblock %}
+
+{% block scripts %}
+{% endblock %}

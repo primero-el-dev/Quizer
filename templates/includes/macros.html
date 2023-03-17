@@ -1,0 +1,51 @@
+{% macro form_field(form, field_name) %}
+	{% if form[field_name].type == 'BooleanField' %}
+	<div class="form-check w-100 mb-3">
+        {{ form[field_name](class_='form-check-input') }}
+        {{ form[field_name].label(class='form-check-label') }}
+    </div>
+	{% else %}
+    <div class="form-group w-100 mb-3">
+        {{ form[field_name].label }}
+        {{ form[field_name](class_='form-control') }}
+        {{ show_errors(form, field_name) }}
+    </div>
+    {% endif %}
+{% endmacro %}
+
+{% macro show_errors(form, field_name) %}
+    {% for error in form[field_name].errors %}
+    <small class="text-danger d-block">{{ error }}</span>
+    {% endfor %}
+{% endmacro %}
+
+{% macro show_question(question) %}
+    <div class="w-100 mb-5">
+        <h5 class="mb-3">{{ question.content }}</h5>
+        {% if question.answer_type == question.SINGLE_CHOICE_TYPE %}
+            {% for answer in question.answers %}
+            <div class="form-check w-100 mb-2">
+                <input type="radio" name="{{ question.id }}" value="{{ answer.id }}" id="{{ answer.id }}" class="form-check-input">
+                <label class="form-check-label" for="{{ answer.id }}">{{ answer.content }}</label>
+            </div>
+            {% endfor %}
+        {% elif question.answer_type == question.MULTIPLE_CHOICE_TYPE %}
+            {% for answer in question.answers %}
+            <div class="form-check w-100 mb-2">
+                <input type="checkbox" name="{{ question.id }}[]" value="{{ answer.id }}" id="{{ answer.id }}" class="form-check-input">
+                <label class="form-check-label" for="{{ answer.id }}">{{ answer.content }}</label>
+            </div>
+            {% endfor %}
+        {% else %}
+            {% for answer in question.answers %}
+            <div class="form-check w-100 mb-3">
+                <input type="range" class="form-range" min="{{ answer.min_points }}" max="{{ answer.max_points }}" step="{{ answer.step }}" id="{{ answer.id }}" name="{{ question.id }}+{{ answer.id }}">
+                <div class="d-flex justify-content-between">
+                    <span>{{ answer.first_label }}</span>
+                    <span>{{ answer.second_label }}</span>
+                </div>
+            </div>
+            {% endfor %}
+        {% endif %}
+    </div>
+{% endmacro %}

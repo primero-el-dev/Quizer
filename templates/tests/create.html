@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+{% import "bootstrap/wtf.html" as wtf %}
+{% from "includes/macros.html" import form_field, show_errors %}
+
+{% block content %}
+    <h1 class="mb-3">{% block title %} Create test {% endblock %}</h1>
+
+    <form method="POST">
+        {{ form.hidden_tag() }}
+
+        {{ form_field(form, 'name') }}
+        {{ form_field(form, 'description') }}
+        {{ form_field(form, 'estimated_minutes') }}
+        {{ form_field(form, 'show_all_result_categories') }}
+        {{ form_field(form, 'show_results_as_percent') }}
+
+        <h3 class="mt-4">Point categories</h3>
+        <p>Below are listed categories for points. If you want more than 1 category which quiz taker is measured, add it below.
+            (removing them from list below may result in questions of these categories lost)
+        </p>
+
+        <div id="point-categories">
+            {% for point_category in form.point_categories %}
+            <div class="point-category card border border-dark">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="d-inline-block">Point category</h5>
+                    <span>
+                        <button type="button" class="move-up-point-category btn btn-mini btn-primary ml-auto" onclick="moveUpPointCategory(event)">Move up</button>
+                        <button type="button" class="move-down-point-category btn btn-mini btn-primary ml-4" onclick="moveDownPointCategory(event)">Move down</button>
+                        <button type="button" class="delete-point-category btn btn-mini btn-danger ml-4" onclick="deleteClosestPointCategory(event)">Delete</button>
+                    </span>
+                </div>
+                <div class="card-body">
+                    {{ point_category.form.hidden_tag() }}
+                    {{ form_field(point_category.form, 'name') }}
+                    {{ form_field(point_category.form, 'description') }}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <button type="button" class="btn btn-primary my-3 w-100" id="insert-point-category" onclick="insertPointCategory(event)">
+            Add new point category
+        </button>
+
+        <button type="submit" class="btn btn-success my-3 w-100">Save</button>
+    </form>
+
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/elements_manipulation.js') }}"></script>
+<script src="{{ url_for('static', filename='js/test_create.js') }}"></script>
+{% endblock %}
